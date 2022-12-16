@@ -84,27 +84,36 @@
                   v-for="t in tickers"
                   :key="t.id"
                   @click="sel"
-                  class="excel"
+                  class="excel droptarget"
+                  v-on:drop="drop"
+                  v-on:dragover="allowDrop"
                 >
-                  <div class="color-wrap">
+                  <div
+                    class="color-drag"
+                    v-on:dragstart="dragStart"
+                    draggable="true"
+                    id="dragtarget"
+                  >
+                    <div class="color-wrap">
+                      <div
+                        v-if="t.quantity"
+                        class="color"
+                        :class="`${t.color}`"
+                      ></div>
+                      <div
+                        v-if="t.quantity > 1"
+                        class="color"
+                        :class="`${t.blur}`"
+                        @click="showPopupInfo(t.id)"
+                      ></div>
+                    </div>
                     <div
                       v-if="t.quantity"
-                      class="color"
-                      :class="`${t.color}`"
-                    ></div>
-                    <div
-                      v-if="t.quantity > 1"
-                      class="color"
-                      :class="`${t.blur}`"
-                      @click="showPopupInfo(t.id)"
-                    ></div>
-                  </div>
-                  <div
-                    v-if="t.quantity"
-                    class="desired-count"
-                    @click="showPopupNumber(t.id)"
-                  >
-                    {{ t.quantity }}
+                      class="desired-count"
+                      @click="showPopupNumber(t.id)"
+                    >
+                      {{ t.quantity }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -238,6 +247,18 @@ export default {
           this.name = '';
         }
       }
+    },
+
+    dragStart(event) {
+      event.dataTransfer.setData('Text', event.target.id);
+    },
+    allowDrop(event) {
+      event.preventDefault();
+    },
+    drop(event) {
+      event.preventDefault();
+      let data = event.dataTransfer.getData('Text');
+      event.target.appendChild(document.getElementById(data));
     },
   },
   mounted() {
@@ -585,6 +606,8 @@ export default {
 }
 .popup__quantity.invalid input {
   border-color: red;
+}
+.color-drag {
 }
 </style>
 
