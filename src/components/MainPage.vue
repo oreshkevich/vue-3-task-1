@@ -18,7 +18,10 @@
               </div>
             </div>
             <div class="product__item card-element">
-              <v-popup v-if="isInfoPopupVisible" @closePopup="closeInfoPopup">
+              <v-popup
+                @closePopup="closeInfoPopup"
+                :isInfoPopup="isInfoPopupVisible"
+              >
                 <div>
                   <div class="popup__wrapper">
                     <div class="popup__color">
@@ -43,26 +46,31 @@
                     <button class="btn popup__button" @click="deleteItem">
                       Удалить предмет
                     </button>
-                    <div v-if="isInfoNumber" class="popup__quantity">
+                    <div
+                      v-if="isInfoNumber"
+                      class="popup__quantity"
+                      :class="{ invalid: errors.name }"
+                    >
                       <input
-                        type="text"
-                        id="text"
-                        name="text"
+                        type="number"
+                        id="number"
+                        name="number"
                         maxlength="30"
                         class="form__input"
                         placeholder="Введите количество"
                         v-model.trim="name"
                       />
+                      <small v-if="errors.name">{{ errors.name }}</small>
                       <div class="button__wrap">
                         <button
                           class="btn popup__cancellation"
-                          @click="deleteItem"
+                          @click="closeItem"
                         >
                           Отмена
                         </button>
                         <button
                           class="btn popup__button popup__button_red"
-                          @click="deleteItem"
+                          @click="submitHandler"
                         >
                           Подтвердить
                         </button>
@@ -94,7 +102,7 @@
                   <div
                     v-if="t.quantity"
                     class="desired-count"
-                    @click="showPopupNumber"
+                    @click="showPopupNumber(t.id)"
                   >
                     {{ t.quantity }}
                   </div>
@@ -130,9 +138,9 @@ export default {
       isInfoPopupVisible: false,
       isInfoNumber: false,
       tickers: [
-        { id: '1', quantity: '2', color: 'color-1', blur: 'blur-1' },
-        { id: '2', quantity: '3', color: 'color-2', blur: 'blur-2' },
-        { id: '3', quantity: '4', color: 'color-3', blur: 'blur-3' },
+        { id: '1', quantity: '4', color: 'color-1', blur: 'blur-1' },
+        { id: '2', quantity: '2', color: 'color-2', blur: 'blur-2' },
+        { id: '3', quantity: '5', color: 'color-3', blur: 'blur-3' },
         { id: '4', quantity: '' },
         { id: '5', quantity: '' },
         { id: '6', quantity: '' },
@@ -157,8 +165,14 @@ export default {
         { id: '25', quantity: '' },
       ],
       isColor: 0,
+      isNumber: 0,
       isColorBlock: '',
       isColorBlockBlur: '',
+      errors: {
+        name: null,
+      },
+      count: '',
+      testObject: '',
     };
   },
   methods: {
@@ -168,13 +182,17 @@ export default {
       this.isColorBlock = this.tickers[parseInt(colorId) - 1].color;
       this.isColorBlockBlur = this.tickers[parseInt(colorId) - 1].blur;
     },
-    showPopupNumber() {
+    showPopupNumber(colorId) {
+      this.isColor = parseInt(colorId) - 1;
+      this.isNumber = this.tickers[this.isColor].quantity;
       this.isInfoPopupVisible = true;
       this.isInfoNumber = true;
     },
     closeInfoPopup() {
       this.isInfoPopupVisible = false;
       this.isInfoNumber = false;
+      this.name = '';
+      this.errors.name = null;
     },
     deleteItem() {
       const item = { ...this.tickers };
@@ -182,10 +200,50 @@ export default {
       item[this.isColor].blur = '';
       item[this.isColor].quantity = '';
       this.tickers = item;
+      localStorage.testObject = JSON.stringify(this.tickers);
     },
-    close() {
+    closeItem() {
       this.name = '';
+      this.errors.name = null;
     },
+    formIsValid() {
+      const res = this.name <= this.isNumber && this.name > 0;
+
+      let isValid = true;
+      if (!res) {
+        this.errors.name = `Введите число <= ${this.isNumber}`;
+        isValid = false;
+      } else {
+        this.errors.name = null;
+      }
+      return isValid;
+    },
+    submitHandler() {
+      if (this.formIsValid()) {
+        const item = { ...this.tickers };
+
+        item[this.isColor].quantity = this.isNumber - parseInt(this.name);
+        this.isNumber = item[this.isColor].quantity;
+        this.tickers = item;
+        this.name = '';
+        localStorage.testObject = JSON.stringify(this.tickers);
+
+        if (this.tickers[this.isColor].quantity == this.name) {
+          const item = { ...this.tickers };
+          item[this.isColor].color = '';
+          item[this.isColor].blur = '';
+          item[this.isColor].quantity = '';
+          this.tickers = item;
+          localStorage.testObject = JSON.stringify(this.tickers);
+          this.name = '';
+        }
+      }
+    },
+  },
+  mounted() {
+    if (localStorage.testObject) {
+      this.tickers = JSON.parse(localStorage.testObject);
+    }
   },
 };
 </script>
@@ -520,6 +578,13 @@ export default {
   background: #262626;
   border: 1px solid #4d4d4d;
   border-radius: 4px;
+}
+.popup__quantity small {
+  display: block;
+  color: red;
+}
+.popup__quantity.invalid input {
+  border-color: red;
 }
 </style>
 

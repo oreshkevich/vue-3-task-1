@@ -1,15 +1,17 @@
 <template>
-  <div ref="popup_wrapper">
-    <div class="v-popup">
-      <div class="v-popup__header">
-        <button
-          class="modal__btn-close modal__close"
-          @click="closePopup"
-        ></button>
-      </div>
-      <div class="v-popup__content">
-        <slot></slot>
-      </div>
+  <div
+    ref="popup_wrapper"
+    class="v-popup vigorous"
+    :class="{ active: isInfoPopup }"
+  >
+    <div class="v-popup__header">
+      <button
+        class="modal__btn-close modal__close"
+        @click="closePopup"
+      ></button>
+    </div>
+    <div class="v-popup__content">
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -18,6 +20,12 @@
 export default {
   name: 'v-popup',
 
+  props: {
+    isInfoPopup: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {};
   },
@@ -45,7 +53,7 @@ export default {
   z-index: 100;
   text-align: center;
   align-items: center;
-  display: flex;
+
   justify-content: center;
   flex-direction: column;
   background: rgba(38, 38, 38, 0.5);
@@ -53,6 +61,16 @@ export default {
   backdrop-filter: blur(8px);
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
+  transition: 0.6s all;
+}
+.vigorous {
+  right: -289px;
+  transition: right 0.5s;
+}
+
+.active {
+  display: flex;
+  right: 0px;
 }
 .v-popup__header,
 .v-popup__footer {

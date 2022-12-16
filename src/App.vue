@@ -87,6 +87,7 @@ button {
   width: 100%;
   margin: 0 auto;
   padding: 0 15px;
+  overflow: hidden;
 }
 
 @media (max-width: 876px) {
