@@ -25,8 +25,6 @@ html {
 body {
   position: relative;
   margin: 0;
-  font-family: 'Open Sans';
-  font-style: normal;
   margin-left: auto;
   margin-right: auto;
   object-fit: cover;
