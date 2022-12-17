@@ -1,5 +1,4 @@
 <template>
-  p
   <div class="wrapper">
     <main class="main">
       <section class="product">
@@ -92,7 +91,7 @@
                     class="color-drag"
                     v-on:dragstart="dragStart"
                     draggable="true"
-                    id="dragtarget"
+                    :id="`${t.id}`"
                   >
                     <div class="color-wrap">
                       <div
@@ -610,4 +609,3 @@ export default {
 .color-drag {
 }
 </style>
-
