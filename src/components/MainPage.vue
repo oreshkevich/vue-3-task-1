@@ -258,6 +258,19 @@ export default {
       event.preventDefault();
       let data = event.dataTransfer.getData('Text');
       event.target.appendChild(document.getElementById(data));
+      let idLastElementChild = event.target.lastElementChild.id - 1;
+      let idFirstElementChild = event.target.firstElementChild.id - 1;
+      const item = { ...this.tickers };
+      let elemTextContent =
+        event.target.lastElementChild.childNodes[1].textContent;
+      item[idLastElementChild].color = '';
+      item[idLastElementChild].blur = '';
+      item[idLastElementChild].quantity = '';
+      item[idFirstElementChild].color = 'color-2';
+      item[idFirstElementChild].blur = 'blur-2';
+      item[idFirstElementChild].quantity = elemTextContent;
+      this.tickers = item;
+      localStorage.testObject = JSON.stringify(this.tickers);
     },
   },
   mounted() {
