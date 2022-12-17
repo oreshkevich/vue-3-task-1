@@ -149,28 +149,28 @@ export default {
         { id: '1', quantity: '4', color: 'color-1', blur: 'blur-1' },
         { id: '2', quantity: '2', color: 'color-2', blur: 'blur-2' },
         { id: '3', quantity: '5', color: 'color-3', blur: 'blur-3' },
-        { id: '4', quantity: '' },
-        { id: '5', quantity: '' },
-        { id: '6', quantity: '' },
-        { id: '7', quantity: '' },
-        { id: '8', quantity: '' },
-        { id: '9', quantity: '' },
-        { id: '10', quantity: '' },
-        { id: '11', quantity: '' },
-        { id: '12', quantity: '' },
-        { id: '13', quantity: '' },
-        { id: '14', quantity: '' },
-        { id: '15', quantity: '' },
-        { id: '16', quantity: '' },
-        { id: '17', quantity: '' },
-        { id: '18', quantity: '' },
-        { id: '19', quantity: '' },
-        { id: '20', quantity: '' },
-        { id: '21', quantity: '' },
-        { id: '22', quantity: '' },
-        { id: '23', quantity: '' },
-        { id: '24', quantity: '' },
-        { id: '25', quantity: '' },
+        { id: '4', quantity: '', color: '', blur: '' },
+        { id: '5', quantity: '', color: '', blur: '' },
+        { id: '6', quantity: '', color: '', blur: '' },
+        { id: '7', quantity: '', color: '', blur: '' },
+        { id: '8', quantity: '', color: '', blur: '' },
+        { id: '9', quantity: '', color: '', blur: '' },
+        { id: '10', quantity: '', color: '', blur: '' },
+        { id: '11', quantity: '', color: '', blur: '' },
+        { id: '12', quantity: '', color: '', blur: '' },
+        { id: '13', quantity: '', color: '', blur: '' },
+        { id: '14', quantity: '', color: '', blur: '' },
+        { id: '15', quantity: '', color: '', blur: '' },
+        { id: '16', quantity: '', color: '', blur: '' },
+        { id: '17', quantity: '', color: '', blur: '' },
+        { id: '18', quantity: '', color: '', blur: '' },
+        { id: '19', quantity: '', color: '', blur: '' },
+        { id: '20', quantity: '', color: '', blur: '' },
+        { id: '21', quantity: '', color: '', blur: '' },
+        { id: '22', quantity: '', color: '', blur: '' },
+        { id: '23', quantity: '', color: '', blur: '' },
+        { id: '24', quantity: '', color: '', blur: '' },
+        { id: '25', quantity: '', color: '', blur: '' },
       ],
       isColor: 0,
       isNumber: 0,
@@ -258,16 +258,27 @@ export default {
       event.preventDefault();
       let data = event.dataTransfer.getData('Text');
       event.target.appendChild(document.getElementById(data));
+
       let idLastElementChild = event.target.lastElementChild.id - 1;
       let idFirstElementChild = event.target.firstElementChild.id - 1;
       const item = { ...this.tickers };
       let elemTextContent =
         event.target.lastElementChild.childNodes[1].textContent;
+
       item[idLastElementChild].color = '';
       item[idLastElementChild].blur = '';
       item[idLastElementChild].quantity = '';
-      item[idFirstElementChild].color = 'color-2';
-      item[idFirstElementChild].blur = 'blur-2';
+      if (elemTextContent == 4) {
+        item[idFirstElementChild].color = 'color-1';
+        item[idFirstElementChild].blur = 'blur-1';
+      } else if (elemTextContent == 2) {
+        item[idFirstElementChild].color = 'color-2';
+        item[idFirstElementChild].blur = 'blur-2';
+      } else {
+        item[idFirstElementChild].color = 'color-3';
+        item[idFirstElementChild].blur = 'blur-3';
+      }
+
       item[idFirstElementChild].quantity = elemTextContent;
       this.tickers = item;
       localStorage.testObject = JSON.stringify(this.tickers);
